@@ -1,5 +1,5 @@
-program postfix;
-uses crt;
+unit postfix;
+interface
 type
     stack_pointer = ^stack;
     stack = Record
@@ -10,6 +10,13 @@ var
     awal,akhir: stack_pointer;
     test:String;
     i:Integer;
+
+function postfix(rumus:String):String;
+procedure push_stack(data:string;var awal,akhir:stack_pointer);
+
+implementation
+uses crt;
+
 //Tambah belakang
 procedure push_stack(data:string;var awal,akhir:stack_pointer);
 var
@@ -77,6 +84,14 @@ begin
     case simbol of
         '+': opr_rank := 1;
         '-': opr_rank := 1;
+        ':': opr_rank := 1;
+        '=': opr_rank := 1;
+        '>': opr_rank := 1;
+        '<': opr_rank := 1;
+        '<=': opr_rank := 1;
+        '>=': opr_rank := 1;
+        ':=': opr_rank := 1;
+        '<>': opr_rank := 1;
         '*': opr_rank := 2;
         '/': opr_rank := 2;
         '^': opr_rank := 3;
@@ -85,13 +100,15 @@ begin
     end;    
 end;//end opr_rank
 
-procedure postfix(rumus:String);
+function postfix(rumus:String):String;
 var 
     i:integer;
     p:String;
 begin
     
     //Initialize
+    awal := nil;
+    akhir := nil;   
     push_stack('(',awal,akhir);
     rumus := concat(rumus,')');
 
@@ -123,19 +140,13 @@ begin
                 end
             else
                 push_stack(rumus[i],awal,akhir);
-              
-                
-    gotoxy(10,10+i);WriteLn(rumus[i]);
-    gotoxy(30,10+i);WriteLn('', p);
-    gotoxy(50,10+i);show_stack(awal); WriteLn();
+       
     end;//endfor
+
+    postfix := p;
 end;
 
 begin
   awal := nil;
   akhir := nil;   
-  postfix('A+(B*C-(D/E^F)*G)*H');  
-
-  show_stack(awal);  
-  readln;
 end.
